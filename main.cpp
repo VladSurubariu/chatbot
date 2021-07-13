@@ -1,43 +1,63 @@
 #include <iostream>
-#include <direct.h>
-#include <fstream>
 #include <cstring>
-#include <cstdlib>
 #include <string>
+#include <fstream>
+#include <direct.h>
+#include <cstdlib>
 
-using namespace std;
+void searchFolder(std::string aux){
+    char pathBuffer[_MAX_PATH];
+    char searchFile[aux.size()+1];
+    char envvar[]="PATH";
+    errno_t error;
 
-//string aux;
-
-void searchFolder(string aux){
-    //char auxC[aux.size()+1];
-    //strcpy(auxC, aux.c_str());
-    //cout<<auxC;
-    char pathbuffer[_MAX_PATH];
-    char searchfile[aux.size()+1];
-    strcpy(searchfile, aux.c_str());
-    char envvar[] = "PATH";
-    errno_t err;
-
-    /* Search for file in PATH environment variable: */
-    err = _searchenv_s( searchfile, envvar, pathbuffer, _MAX_PATH );
-    if (err != 0)
-    {
-        printf("Error searching the path. Error code: %d\n", err);
+    strcpy(searchFile, aux.c_str());
+    error=_searchenv_s(searchFile, envvar, pathBuffer, _MAX_PATH);
+    if (error!=0){
+        std::cout<<"Error number "<<error<<std::endl;
     }
-    if( *pathbuffer != '\0' )
-        printf( "Path for %s:\n%s\n", searchfile, pathbuffer );
-    else
-        printf( "%s not found\n", searchfile );
-
+    if (*pathBuffer !='\0'){
+        std::cout<<"Folderul "<<searchFile<<" a fost gasit in "<<pathBuffer<<std::endl;
+    }
+    else{
+        std::cout<<searchFile<<" was not found"<<std::endl;
+    }
 }
+
+void createNewFolder(std::string aux){
+    std::string newFolderName;
+    std::cout<<"Introduceti numele noului folder: ";
+    std::cin>>newFolderName;
+    aux=aux+"\\";
+    aux=aux+newFolderName;
+
+    char pathToCreate[aux.size()+1];
+
+    strcpy(pathToCreate, aux.c_str());
+
+    if(_mkdir(pathToCreate)==0){
+        std::cout<<"The folder has been created. The path is: "<<aux;
+    }
+    else{
+            if(errno==2)
+                std::cout<<"No such file or directory."<<std::endl;
+            if(errno==17)
+                std::cout<<"This folder already exists."<<std::endl;
+        }
+    }
+
 
 int main(){
     //(D:\Proiecte\c++\Conti Challenge\Chatbot\Conversatie //path
-    _chdir(R"(D:\Proiecte\c++\Conti Challenge\Chatbot)"); //changing the working folder
-    string aux="Conversatie";
+    /*_chdir(R"(D:\Proiecte\c++\Conti Challenge\Chatbot)"); //path set
+    std::string aux="Conversatie";
     searchFolder(aux);
+    _chdir(R"(D:\Proiecte\c++\Conti Challenge\Chatbot\Conversatie)");
+    aux="Salut";
+    searchFolder(aux);
+    */
 
+    createNewFolder(R"(D:\Proiecte\c++\Conti Challenge\Chatbot\Conversatie)");
 
     return 0;
 }
