@@ -47,42 +47,42 @@ bool searchFolder(std::string auxNumeFolder){
 
 void processUserAnswer(){
     std::string userAnswer=readUserAnswer();
-    while(userAnswer!="stop") {
-        char userSentence[userAnswer.size() + 1];
+    while(userAnswer!="stop" && userAnswer!="Stop" && userAnswer!="STOP"){
+        char userSentence[userAnswer.size()+1];
         strcpy(userSentence, userAnswer.c_str());
-        char *wordToken = strtok(userSentence, " ");
-        while (wordToken != NULL) {
-            std::string word = wordToken;
-            if (word[word.size() - 1] == '?') {
-                word[word.size() - 1] = '-';
+        char *wordToken=strtok(userSentence, " ");
+        std::string wordFromSentence;
+        while(wordToken != NULL){
+            wordFromSentence=wordToken;
+            if (wordFromSentence[wordFromSentence.size() - 1] == '?') {
+                wordFromSentence[wordFromSentence.size() - 1] = '\0';
             }
-            bool folderCheck = searchFolder(word);
-            if (folderCheck) {
-                changeDirectory(word);
-                if (word[word.size() - 1] == '-' || word[word.size() - 1] == '!' || word[word.size() - 1] == '.') {
-                    std::string chatbotAnswer;
-                    std::string denumireFisier = word + ".txt";
-                    std::ifstream f(denumireFisier);
-                    while(f >> chatbotAnswer)
-                        std::cout <<" "<< chatbotAnswer;
-                }
-            } else {
-                createNewFolder(path, word);
-                changeDirectory(word);
-                if (word[word.size() - 1] == '-' || word[word.size() - 1] == '!' || word[word.size() - 1] == '.') {
-                    std::string chatbotAnswer;
-                    std::string denumireFisier = word + ".txt";
-                    std::ofstream f(denumireFisier);
-                    std::cout << "Nu am gasit un raspuns in baza de date. Ofera-mi o sugestie: ";
-                    std::getline(std::cin, chatbotAnswer);
-                    std::cout<<chatbotAnswer<<std::endl;
-                    f << chatbotAnswer;
-                }
+            bool folderCheck=searchFolder(wordFromSentence);
+            if(folderCheck==0){
+                createNewFolder(path, wordFromSentence);
             }
-            wordToken = strtok(NULL, " ");
-            if(wordToken==NULL){
-            }
+            changeDirectory(wordFromSentence);
+            wordToken=strtok(NULL, " ");
         }
+        std::string chatbotAnswer;
+        std::string denumireFisier = wordFromSentence + ".txt";
+        std::ifstream answerFile;
+        answerFile.open(denumireFisier);
+        if(answerFile){
+            while(answerFile>>chatbotAnswer){
+                std::cout<<" "<<chatbotAnswer;
+            }
+            std::cout<<std::endl;
+        }
+        else{
+            std::ofstream createAnswerFile(denumireFisier);
+            std::cout<<"Nu am gasit un raspuns in baza de date. Ofera-mi o sugestie: ";
+            std::getline(std::cin, chatbotAnswer);
+            createAnswerFile<<chatbotAnswer;
+            std::cout<<"Am inregistrat raspunsul. Multumesc. "<<std::endl;
+            createAnswerFile.close();
+        }
+
         userAnswer=readUserAnswer();
         path="D:\\Proiecte\\c++\\Conti Challenge\\Chatbot\\Conversatie";
         _chdir(path.c_str());
