@@ -64,19 +64,21 @@ std::string tokeniseSentence(char *userSentence){
         if (wordFromSentence[wordFromSentence.size() - 1] == '?') {
             wordFromSentence[wordFromSentence.size() - 1] = '\0';
         }
+        createAnswerFolder(wordFromSentence);
         changeDirectory(wordFromSentence);
         wordToken=strtok(NULL, " ");
     }
     return wordFromSentence;
 }
 
-void createAnswer(std::string denumireFisier){
+void recordAnswer(std::string denumireFisier){
     std::string chatbotAnswer;
     std::ofstream createAnswerFile(denumireFisier);
+
     std::cout<<"Nu am gasit un raspuns in baza de date. Ofera-mi o sugestie: ";
     std::getline(std::cin, chatbotAnswer);
     createAnswerFile<<chatbotAnswer;
-    std::cout<<"Am inregistrat raspunsul. Multumesc. "<<std::endl;
+    std::cout<<"Am inregistrat raspunsul. Doresti sa imi oferi mai multe variante de raspuns? "<<std::endl;
     createAnswerFile.close();
 }
 
@@ -91,7 +93,7 @@ void offerAnswer(std::string denumireFisier){
         std::cout<<std::endl;
     }
     else{
-        createAnswer(denumireFisier);
+        recordAnswer(denumireFisier);
     }
 }
 
