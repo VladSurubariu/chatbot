@@ -5,6 +5,7 @@
 #include "folderManipulation.h"
 #include "answerFunctions.h"
 
+
 int main(){
     setDefaultPath();
     processUserAnswer();
