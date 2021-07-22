@@ -12,4 +12,3 @@ void changeDirectory(std::string toAdd){ //functia cu ajutorul careia se schimba
     searchingPath=searchingPath+toAdd;
     _chdir(searchingPath.c_str());
 }
-

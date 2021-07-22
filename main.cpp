@@ -11,4 +11,3 @@ int main(){
     processUserAnswer();
     return 0;
 }
-
