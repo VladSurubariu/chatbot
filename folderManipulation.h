@@ -1,7 +1,10 @@
+// header-ul cu functiile pentru a crea foldere si pentru a scrie in ele
+
 #pragma once
 #include "pathSetter.h"
 
-void createNewFolder(std::string auxDirector, std::string newFolderName){
+
+void createNewFolder(std::string auxDirector, std::string newFolderName){ //functie care creaza un folder nou
     auxDirector=auxDirector+"\\";
     auxDirector=auxDirector+newFolderName;
 
@@ -10,7 +13,7 @@ void createNewFolder(std::string auxDirector, std::string newFolderName){
     _mkdir(pathToCreate);
 }
 
-bool searchFolder(std::string auxNumeFolder){
+bool searchFolder(std::string auxNumeFolder){ //functia care cauta folderul cu numele auxNumeFolder in path-ul actual
     char pathBuffer[_MAX_PATH];
     char searchFile[auxNumeFolder.size()+1];
     char envvar[]="PATH";
@@ -25,10 +28,9 @@ bool searchFolder(std::string auxNumeFolder){
     }
 }
 
-void createAnswerFolder(std::string wordFromSentence){
+void createAnswerFolder(std::string wordFromSentence){ //functie care creaza fisierele txt
     bool folderCheck=searchFolder(wordFromSentence);
     if(folderCheck==0){
         createNewFolder(searchingPath, wordFromSentence);
     }
 }
-
